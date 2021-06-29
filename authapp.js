@@ -10,12 +10,14 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post("/token", (req, res) => {
+app.post("/gentoken", (req, res) => {
   request.post(
     "localhost:3100/auth",
     { username: "melgo" },
     (err, res, body) => {
       console.log(body);
+
+      //TODO; Store cookie persistance
     }
   );
 
@@ -31,19 +33,23 @@ app.post("/token", (req, res) => {
   );
 });
 
-app.post(
-  "/secure",
-
-  (req, res) => {
-    request.post(
-      "http://localhost:3100/authme",
-      { json: { token: req.headers.authorization } },
-      (err, res) => {
-        console.log(res.body);
+//Auth Implementation next
+const authEndpoint = (req, res, next) => {
+  request.post(
+    "http://localhost:3100/authme",
+    { json: { token: req.headers.authorization } },
+    (err, resp) => {
+      if (resp.body.access) {
+        next();
       }
-    );
-  }
-);
+      return;
+    }
+  );
+};
+
+app.post("/securedemo", authEndpoint, (req, res) => {
+  console.log("succcess");
+});
 
 app.listen(3000, () => {
   console.log("listen on port 3000s");
