@@ -23,13 +23,9 @@ app.post("/auth", (req, res) => {
   res.send(authSign).sendStatus(200);
 });
 
-app.post(
-  "/authenticated",
-  new AuthController().authenticateJwtRequest,
-  (req, res) => {
-    res.send("user authenticated");
-  }
-);
+app.post("/authme", new AuthController().authenticateJwtRequest, (req, res) => {
+  res.send({ access: true });
+});
 
 app.listen(process.env.PORT, () => {
   console.log("Application Listen on PORT " + process.env.PORT);

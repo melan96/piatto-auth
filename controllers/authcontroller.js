@@ -14,7 +14,7 @@ class AuthController {
   }
 
   authenticateJwtRequest(req, res, next) {
-    const authHeader = req.headers.authorization;
+    const authHeader = req.body.token;
 
     if (authHeader) {
       const token = authHeader.split(" ")[1];
@@ -23,14 +23,14 @@ class AuthController {
       jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
         if (err) {
           console.log(err);
-          return res.sendStatus(403);
+          return res.send({ access: false });
         }
 
         req.user = user;
         next();
       });
     } else {
-      res.sendStatus(401);
+      res.send({ access: false });
     }
   }
 }
