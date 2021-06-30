@@ -21,23 +21,12 @@ app.post("/gentoken", (req, res) => {
       //TODO; Store cookie persistance
     }
   );
-
-  request.post(
-    "http://localhost:3100/auth",
-    { json: { username: req.body.username } },
-    (err, res) => {
-      if (err) {
-        console.log(err);
-      }
-      console.log(res.body.accessToken);
-    }
-  );
 });
 
 //Auth Implementation next
 const authEndpoint = (req, res, next) => {
   request.post(
-    "http://localhost:3100/authme",
+    authapi + "/authme",
     { headers: { authorization: req.headers.authorization } },
 
     (err, resp) => {
