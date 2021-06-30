@@ -9,12 +9,14 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+let authapi = process.env.AUTH_API;
 app.post("/gentoken", (req, res) => {
   request.post(
-    "localhost:3100/auth",
-    { username: "melgo" },
-    (err, res, body) => {
-      console.log(body);
+    authapi + "/auth",
+    { username: req.body.username },
+    (err, resp) => {
+      console.log(resp.body);
+      res.send(resp.body);
 
       //TODO; Store cookie persistance
     }

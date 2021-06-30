@@ -20,7 +20,7 @@ app.post("/auth", (req, res) => {
   //require('crypto').randomBytes(64).toString('hex')
 
   let authSign = new AuthController().generateToken(req.body.username);
-  res.send(authSign).sendStatus(200);
+  res.json({ token: authSign }).sendStatus(200);
 });
 
 app.post("/authme", new AuthController().authenticateJwtRequest, (req, res) => {
