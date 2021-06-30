@@ -24,7 +24,8 @@ app.post("/auth", (req, res) => {
 });
 
 app.post("/authme", new AuthController().authenticateJwtRequest, (req, res) => {
-  res.send({ access: true });
+  console.log(req.headers);
+  res.json({ access: true });
 });
 
 app.listen(process.env.PORT, () => {

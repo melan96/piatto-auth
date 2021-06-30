@@ -14,7 +14,7 @@ class AuthController {
   }
 
   authenticateJwtRequest(req, res, next) {
-    const authHeader = req.body.token;
+    const authHeader = req.headers.authorization;
 
     if (authHeader) {
       const token = authHeader.split(" ")[1];

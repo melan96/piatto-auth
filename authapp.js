@@ -37,9 +37,12 @@ app.post("/gentoken", (req, res) => {
 const authEndpoint = (req, res, next) => {
   request.post(
     "http://localhost:3100/authme",
-    { json: { token: req.headers.authorization } },
+    { headers: { authorization: req.headers.authorization } },
+
     (err, resp) => {
-      if (resp.body.access) {
+      resp = JSON.parse(resp.body);
+
+      if (resp.access) {
         next();
       }
       return;
