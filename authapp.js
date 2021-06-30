@@ -1,6 +1,5 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const AuthController = require("./controllers/authcontroller");
 const cors = require("cors");
 const request = require("request");
 require("dotenv").config();
@@ -41,17 +40,17 @@ const authEndpoint = (req, res, next) => {
 
     (err, resp) => {
       resp = JSON.parse(resp.body);
-
       if (resp.access) {
         next();
+      } else {
+        res.sendStatus(403);
       }
-      return;
     }
   );
 };
 
 app.post("/securedemo", authEndpoint, (req, res) => {
-  console.log("succcess");
+  res.json({ message: "true" });
 });
 
 app.listen(3000, () => {
