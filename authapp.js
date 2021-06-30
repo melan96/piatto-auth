@@ -1,6 +1,5 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const AuthController = require("./controllers/authcontroller");
 const cors = require("cors");
 const request = require("request");
 require("dotenv").config();
@@ -37,18 +36,21 @@ app.post("/gentoken", (req, res) => {
 const authEndpoint = (req, res, next) => {
   request.post(
     "http://localhost:3100/authme",
-    { json: { token: req.headers.authorization } },
+    { headers: { authorization: req.headers.authorization } },
+
     (err, resp) => {
-      if (resp.body.access) {
+      resp = JSON.parse(resp.body);
+      if (resp.access) {
         next();
+      } else {
+        res.sendStatus(403);
       }
-      return;
     }
   );
 };
 
 app.post("/securedemo", authEndpoint, (req, res) => {
-  console.log("succcess");
+  res.json({ message: "true" });
 });
 
 app.listen(3000, () => {

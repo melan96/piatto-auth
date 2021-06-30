@@ -8,13 +8,15 @@ class AuthController {
     //This function generate a usertoken
     console.log(process.env.TOKEN_SECRET);
     var authObject = {
-      accessToken: jwt.sign(username, process.env.TOKEN_SECRET),
+      accessToken: jwt.sign({ username }, process.env.TOKEN_SECRET, {
+        expiresIn: "1h",
+      }),
     };
     return authObject;
   }
 
   authenticateJwtRequest(req, res, next) {
-    const authHeader = req.body.token;
+    const authHeader = req.headers.authorization;
 
     if (authHeader) {
       const token = authHeader.split(" ")[1];
@@ -23,14 +25,14 @@ class AuthController {
       jwt.verify(token, process.env.TOKEN_SECRET, (err, user) => {
         if (err) {
           console.log(err);
-          return res.send({ access: false });
+          return res.json({ access: false });
         }
 
         req.user = user;
         next();
       });
     } else {
-      res.send({ access: false });
+      res.json({ access: false });
     }
   }
 }
